@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace WebAPI
 {
@@ -28,7 +29,17 @@ namespace WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers()
+                //.AddJsonOptions(x => x.JsonSerializerOptions);
+                .AddNewtonsoftJson(x =>
+                {
+                    x.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                    x.SerializerSettings.DefaultValueHandling = DefaultValueHandling.Ignore;
+                    //x.SerializerSettings.DateFormatHandling = DateFormatHandling.MicrosoftDateFormat;
+                    x.SerializerSettings.DateFormatString = "yy MMM+dd";
+                    x.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.Objects;
+                })
+                .AddXmlSerializerFormatters();
 
             services.AddSingleton<IOrdersService, OrdersService>()
                     .AddSingleton<ICrudService<Order>>(x => x.GetService<IOrdersService>())
