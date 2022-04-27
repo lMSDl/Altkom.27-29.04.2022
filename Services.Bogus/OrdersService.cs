@@ -12,7 +12,7 @@ namespace Services.Bogus
     {
         private ICollection<Order> _collection;
 
-        public OrdersService(OrderFaker faker, int count)
+        public OrdersService(OrderFaker faker, int count = 1000)
         {
             _collection = faker.Generate(count);
         }
