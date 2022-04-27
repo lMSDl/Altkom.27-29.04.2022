@@ -45,6 +45,12 @@ namespace WebAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(T entity)
         {
+            //przykład "ręcznego" sprawdzenia poprawności przesłanego modelu i odpowiedź informująca klienta o jego błędach
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             entity = await Service.CreateAsync(entity);
 
             return CreatedAtAction(nameof(Get), new { id = entity.Id }, entity); //zwraca wynik funkcji oraz dodaje do nagłowka odpowiedzi klucz Location z adresem spod którego można pobrać zasób

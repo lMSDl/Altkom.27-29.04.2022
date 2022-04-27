@@ -58,6 +58,9 @@ namespace WebAPI
             services.AddTransient<OrderFaker>()
                 .AddTransient<EntityFaker<User>, UserFaker>()
                 .AddTransient<EntityFaker<Product>, ProductFaker>();
+
+            //domyœlnia walidacja modelu jest w³¹czona - w poni¿szy sposób mo¿na j¹ wy³¹czyæ
+            services.Configure<ApiBehaviorOptions>(x => x.SuppressModelStateInvalidFilter = true);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -67,7 +70,7 @@ namespace WebAPI
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            
             app.UseRouting();
 
             app.UseResponseCompression();

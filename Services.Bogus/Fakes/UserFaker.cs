@@ -13,6 +13,7 @@ namespace Services.Bogus.Fakes
         {
             RuleFor(x => x.Username, x => x.Person.UserName);
             RuleFor(x => x.Password, x => x.Internet.Password());
+            RuleFor(x => x.Email, x => x.Person.Email);
         }
     }
 }
