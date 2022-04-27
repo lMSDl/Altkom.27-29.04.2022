@@ -14,5 +14,14 @@ namespace WebAPI.Controllers
         public OrdersController(IOrdersService service) : base(service)
         {
         }
+
+        //[HttpGet("{id}/Products")]
+        //public async Task<IActionResult> GetProducts(int id)
+        //{
+        //    var order = await Service.GetAsync(id);
+        //    if (order == null)
+        //        return NotFound();
+        //    return Ok(order.Products);
+        //}
     }
 }

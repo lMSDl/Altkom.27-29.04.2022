@@ -15,17 +15,17 @@ namespace WebAPI.Controllers
     [ApiController]
     public abstract class ApiController<T> : ControllerBase where T : Entity
     {
-        private ICrudService<T> _service;
+        protected ICrudService<T> Service { get; }
         public ApiController(ICrudService<T> service)
         {
-            _service = service;
+            Service = service;
         }
 
         [HttpGet]
         //public Task<IEnumerable<T>> Get()
         public async Task<IActionResult> Get()
         {
-            var entities = await _service.GetAsync();
+            var entities = await Service.GetAsync();
             return Ok(entities); //zwracamy odpowiedź z ciałem (body) i kodem 200
         }
 
@@ -35,7 +35,7 @@ namespace WebAPI.Controllers
         [HttpGet("{id:int}")]
         public async Task<IActionResult> Get(int id)
         {
-            var entity = await _service.GetAsync(id);
+            var entity = await Service.GetAsync(id);
             if (entity == null)
                 return NotFound(); //zasób nieznaleziony
 
@@ -45,7 +45,7 @@ namespace WebAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(T entity)
         {
-            entity = await _service.CreateAsync(entity);
+            entity = await Service.CreateAsync(entity);
 
             return CreatedAtAction(nameof(Get), new { id = entity.Id }, entity); //zwraca wynik funkcji oraz dodaje do nagłowka odpowiedzi klucz Location z adresem spod którego można pobrać zasób
         }
@@ -53,20 +53,20 @@ namespace WebAPI.Controllers
         [HttpPut("{entityId}")]
         public virtual async Task<IActionResult> Put(int entityId, T entity)
         {
-            if (await _service.GetAsync(entityId) == null)
+            if (await Service.GetAsync(entityId) == null)
                 return NotFound();
 
-            await _service.UpdateAsync(entityId, entity);
+            await Service.UpdateAsync(entityId, entity);
             return NoContent(); //odpowiedź 204 - przetwarzanie zakończone poprawnie, ale odpowiedź nie zawira ciała
         }
 
         [HttpDelete("{entityId}")]
         public async Task<IActionResult> Delete(int entityId)
         {
-            if (await _service.GetAsync(entityId) == null)
+            if (await Service.GetAsync(entityId) == null)
                 return NotFound();
 
-            await _service.DeleteAsync(entityId);
+            await Service.DeleteAsync(entityId);
             return NoContent();
         }
 

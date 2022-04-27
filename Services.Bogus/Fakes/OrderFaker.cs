@@ -14,6 +14,7 @@ namespace Services.Bogus.Fakes
             RuleFor(x => x.DateTime, x => x.Date.Recent());
             RuleFor(x => x.Currency, x => "PLN");
             RuleFor(x => x.Cost, x => (decimal)x.Random.Double(100, 1000));
+            RuleFor(x => x.Products, x => new ProductFaker().Generate(x.Random.Int(1, 15)));
         }
     }
 }

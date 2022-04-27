@@ -31,9 +31,12 @@ namespace WebAPI
             services.AddControllers();
 
             services.AddSingleton<IOrdersService, OrdersService>()
-                    .AddSingleton<ICrudService<User>, CrudService<User>>();
+                    .AddSingleton<ICrudService<Order>>(x => x.GetService<IOrdersService>())
+                    .AddSingleton<ICrudService<User>, CrudService<User>>()
+                    .AddSingleton<ICrdParentService<Product>, ProductService>();
             services.AddTransient<OrderFaker>()
-                .AddTransient<EntityFaker<User>, UserFaker>();
+                .AddTransient<EntityFaker<User>, UserFaker>()
+                .AddTransient<EntityFaker<Product>, ProductFaker>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
