@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.ResponseCompression;
 
 namespace WebAPI
 {
@@ -41,6 +42,15 @@ namespace WebAPI
                 })
                 .AddXmlSerializerFormatters();
 
+            //jeœli nie okreslomy inaczej, to zastosowane zostanie br i gzip
+            services.AddResponseCompression(x =>
+            {
+                x.Providers.Clear();
+                x.Providers.Add<BrotliCompressionProvider>();
+                x.Providers.Add<GzipCompressionProvider>();
+                x.EnableForHttps = true; //je¿eli u¿ywamy https, nale¿y to w³¹czyæ (domyslnie wy³¹czone)
+            });
+
             services.AddSingleton<IOrdersService, OrdersService>()
                     .AddSingleton<ICrudService<Order>>(x => x.GetService<IOrdersService>())
                     .AddSingleton<ICrudService<User>, CrudService<User>>()
@@ -60,6 +70,7 @@ namespace WebAPI
 
             app.UseRouting();
 
+            app.UseResponseCompression();
 
             app.UseEndpoints(endpoints =>
             {
