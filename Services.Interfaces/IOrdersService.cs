@@ -1,12 +1,13 @@
 ﻿using Models;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Services.Interfaces
 {
     public interface IOrdersService
     {
-        IEnumerable<Order> Get();
-        Order Get(int id);
+        Task<IEnumerable<Order>> GetAsync();
+        Task<Order> GetAsync(int id);
     }
 }

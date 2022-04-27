@@ -4,6 +4,7 @@ using Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Services.Bogus
 {
@@ -16,14 +17,15 @@ namespace Services.Bogus
             _collection = faker.Generate(count);
         }
 
-        public IEnumerable<Order> Get()
+        public Task<IEnumerable<Order>> GetAsync()
         {
-            return _collection.ToList();
+            IEnumerable<Order> result = _collection.ToList();
+            return Task.FromResult(result);
         }
 
-        public Order Get(int id)
+        public Task<Order> GetAsync(int id)
         {
-            return _collection.SingleOrDefault(x => x.Id == id);
+            return Task.FromResult(_collection.SingleOrDefault(x => x.Id == id));
         }
     }
 }
