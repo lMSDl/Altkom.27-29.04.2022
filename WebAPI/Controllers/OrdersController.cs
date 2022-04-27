@@ -22,19 +22,54 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        public Task<IEnumerable<Order>> Get()
+        //public Task<IEnumerable<Order>> Get()
+        public async Task<IActionResult> Get()
         {
-            return _service.GetAsync();
+            var entities = await _service.GetAsync();
+            return Ok(entities); //zwracamy odpowiedź z ciałem (body) i kodem 200
         }
 
         //api/Orders/{id}
         //{} - w nawiasach klarmowych podajemy nazwę parametru - nawy parametrów fukcji dopasowane do nazw w nawiasach
         // : - po dwukropku możemy określić typ parametru dla routingu
         [HttpGet("{id:int}")]
-        public Task<Order> Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            return _service.GetAsync(id);
+            var entity = await _service.GetAsync(id);
+            if (entity == null)
+                return NotFound(); //zasób nieznaleziony
+            
+            return Ok(entity);
         }
-        
+
+        [HttpPost]
+        public async Task<IActionResult> Post(Order order)
+        {
+            order = await _service.CreateAsync(order);
+
+            return CreatedAtAction(nameof(Get), new { id = order.Id }, order); //zwraca wynik funkcji oraz dodaje do nagłowka odpowiedzi klucz Location z adresem spod którego można pobrać zasób
+        }
+
+        [HttpPut("{entityId}")]
+        public async Task<IActionResult> Put(int entityId, Order order)
+        {
+            if (await _service.GetAsync(entityId) == null)
+                return NotFound();
+
+            await _service.UpdateAsync(entityId, order);
+            return NoContent(); //odpowiedź 204 - przetwarzanie zakończone poprawnie, ale odpowiedź nie zawira ciała
+        }
+
+        [HttpDelete("{entityId}")]
+        public async Task<IActionResult> Delete(int entityId)
+        {
+            if (await _service.GetAsync(entityId) == null)
+                return NotFound();
+
+            await _service.DeleteAsync(entityId);
+            return NoContent();
+        }
+
+
     }
 }

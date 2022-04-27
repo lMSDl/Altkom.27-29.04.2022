@@ -14,7 +14,19 @@ namespace Services.Bogus
 
         public OrdersService(OrderFaker faker, int count = 1000)
         {
-            _collection = faker.Generate(count);
+            _collection = faker.Generate(count).GroupBy(x => x.Id).Select(x => x.First()).ToList();
+        }
+
+        public Task<Order> CreateAsync(Order order)
+        {
+            order.Id = _collection.Max(x => x.Id) + 1;
+            _collection.Add(order);
+            return Task.FromResult(order);
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            _collection.Remove(await GetAsync(id));
         }
 
         public Task<IEnumerable<Order>> GetAsync()
@@ -26,6 +38,13 @@ namespace Services.Bogus
         public Task<Order> GetAsync(int id)
         {
             return Task.FromResult(_collection.SingleOrDefault(x => x.Id == id));
+        }
+
+        public async Task UpdateAsync(int id, Order order)
+        {
+            await DeleteAsync(id);
+            order.Id = id;
+            _collection.Add(order);
         }
     }
 }
