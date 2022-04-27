@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Models;
 using Services.Bogus;
 using Services.Bogus.Fakes;
 using Services.Interfaces;
@@ -29,8 +30,10 @@ namespace WebAPI
         {
             services.AddControllers();
 
-            services.AddSingleton<IOrdersService, OrdersService>();
-            services.AddTransient<OrderFaker>();
+            services.AddSingleton<IOrdersService, OrdersService>()
+                    .AddSingleton<ICrudService<User>, CrudService<User>>();
+            services.AddTransient<OrderFaker>()
+                .AddTransient<EntityFaker<User>, UserFaker>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
