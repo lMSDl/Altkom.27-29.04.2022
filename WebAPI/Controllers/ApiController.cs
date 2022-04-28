@@ -45,6 +45,13 @@ namespace WebAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(T entity)
         {
+            if(entity.Id != 0)
+            {
+                //ręczne dodawanie błędów odnośnie modelu
+                ModelState.AddModelError(nameof(Entity.Id), "Wartość musi być 0");
+            }
+
+
             //przykład "ręcznego" sprawdzenia poprawności przesłanego modelu i odpowiedź informująca klienta o jego błędach
             if (!ModelState.IsValid)
             {
