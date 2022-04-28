@@ -15,13 +15,15 @@ namespace WebAPI.Controllers
 
         public class Loop : Entity
         {
+            public string Name { get; set; }
             public Loop InsideLoop { get; set; }
         }
 
-        public IActionResult Get()
+        // [route]?loop1Name=<value>&loop2Name=<value>
+        public IActionResult Get([FromQuery]string loop1Name, [FromQuery] int loop2Name = 2)
         {
-            var loop1 = new Loop();
-            var loop2 = new Loop();
+            var loop1 = new Loop() { Name = loop1Name };
+            var loop2 = new Loop() { Name = loop2Name.ToString() };
             loop1.InsideLoop = loop2;
             loop2.InsideLoop = loop1;
 
