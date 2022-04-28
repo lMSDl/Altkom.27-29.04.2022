@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebAPI.FIlters;
 
 namespace WebAPI.Controllers
 {
@@ -13,6 +14,7 @@ namespace WebAPI.Controllers
     // [] - w nawiasach kwadratowych wstawiona zostanie nazwa kontrolera będąca nazwą zasobów
     [Route("api/[controller]")]
     [ApiController]
+    [ServiceFilter(typeof(ConsoleLogFilter))]
     public abstract class ApiController<T> : ControllerBase where T : Entity
     {
         protected ICrudService<T> Service { get; }
@@ -22,6 +24,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
+        [ServiceFilter(typeof(LimiterFilter))]
         //public Task<IEnumerable<T>> Get()
         public async Task<IActionResult> Get()
         {

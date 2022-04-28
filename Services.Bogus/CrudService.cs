@@ -26,7 +26,7 @@ namespace Services.Bogus
 
         public async Task DeleteAsync(int id)
         {
-            Collection.Remove(await GetAsync(id));
+            _ = Collection.Remove(await GetAsync(id));
         }
 
         public Task<IEnumerable<T>> GetAsync()

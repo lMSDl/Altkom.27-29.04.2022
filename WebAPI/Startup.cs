@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.ResponseCompression;
 using FluentValidation.AspNetCore;
 using FluentValidation;
 using Models.Validators;
+using WebAPI.FIlters;
 
 namespace WebAPI
 {
@@ -74,6 +75,8 @@ namespace WebAPI
             //domyœlnia walidacja modelu jest w³¹czona - w poni¿szy sposób mo¿na j¹ wy³¹czyæ
             //services.Configure<ApiBehaviorOptions>(x => x.SuppressModelStateInvalidFilter = true);
 
+            services.AddScoped<ConsoleLogFilter>();
+            services.AddSingleton(x => new LimiterFilter(5));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
