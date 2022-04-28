@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using Services.Interfaces;
@@ -15,6 +16,7 @@ namespace WebAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [ServiceFilter(typeof(ConsoleLogFilter))]
+    [Authorize]
     public abstract class ApiController<T> : ControllerBase where T : Entity
     {
         protected ICrudService<T> Service { get; }
@@ -26,7 +28,8 @@ namespace WebAPI.Controllers
         [HttpGet]
         [ServiceFilter(typeof(LimiterFilter))]
         //public Task<IEnumerable<T>> Get()
-        public async Task<IActionResult> Get()
+        [Authorize(Roles = nameof(Roles.Read))]
+        public virtual async Task<IActionResult> Get()
         {
             var entities = await Service.GetAsync();
             return Ok(entities); //zwracamy odpowiedź z ciałem (body) i kodem 200
@@ -36,6 +39,7 @@ namespace WebAPI.Controllers
         //{} - w nawiasach klarmowych podajemy nazwę parametru - nawy parametrów fukcji dopasowane do nazw w nawiasach
         // : - po dwukropku możemy określić typ parametru dla routingu
         [HttpGet("{id:int}")]
+        [Authorize(Roles = nameof(Roles.Read))]
         public async Task<IActionResult> Get(int id)
         {
             var entity = await Service.GetAsync(id);
@@ -46,6 +50,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = nameof(Roles.Write))]
         public async Task<IActionResult> Post(T entity)
         {
             if(entity.Id != 0)
@@ -67,6 +72,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("{entityId}")]
+        [Authorize(Roles = nameof(Roles.Update))]
         public virtual async Task<IActionResult> Put(int entityId, T entity)
         {
             if (await Service.GetAsync(entityId) == null)
@@ -77,6 +83,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpDelete("{entityId}")]
+        [Authorize(Roles = nameof(Roles.Delete))]
         public async Task<IActionResult> Delete(int entityId)
         {
             if (await Service.GetAsync(entityId) == null)

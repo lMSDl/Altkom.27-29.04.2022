@@ -19,6 +19,9 @@ using FluentValidation.AspNetCore;
 using FluentValidation;
 using Models.Validators;
 using WebAPI.FIlters;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using WebAPI.Services;
 
 namespace WebAPI
 {
@@ -77,6 +80,24 @@ namespace WebAPI
 
             services.AddScoped<ConsoleLogFilter>();
             services.AddSingleton(x => new LimiterFilter(5));
+            services.AddScoped<AuthService>();
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateAudience = false,
+                        ValidateIssuer = false,
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(AuthService.Key)
+                    };
+                });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -89,7 +110,11 @@ namespace WebAPI
             
             app.UseRouting();
 
+            app.UseAuthentication();
+            app.UseAuthorization();
+
             app.UseResponseCompression();
+
 
             app.UseEndpoints(endpoints =>
             {
