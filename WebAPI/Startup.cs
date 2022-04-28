@@ -15,6 +15,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.ResponseCompression;
+using FluentValidation.AspNetCore;
+using FluentValidation;
+using Models.Validators;
 
 namespace WebAPI
 {
@@ -40,7 +43,16 @@ namespace WebAPI
                     x.SerializerSettings.DateFormatString = "yy MMM+dd";
                     x.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.Objects;
                 })
-                .AddXmlSerializerFormatters();
+                .AddXmlSerializerFormatters()
+                //dodanie walidacji do kontrolerów
+                .AddFluentValidation(x =>
+                    //automatyczne zarejestrowanie walidatorów, które s¹ w tym samym assembly co wskazany
+                    x.RegisterValidatorsFromAssemblyContaining<OrderValidator>()
+                );
+
+            //rêczne dodtawanie walidatorów
+            //services.AddTransient<IValidator<Order>, OrderValidator>();
+            //services.AddTransient<IValidator<Product>, ProductValidator>();
 
             //jeœli nie okreslomy inaczej, to zastosowane zostanie br i gzip
             services.AddResponseCompression(x =>
@@ -60,7 +72,8 @@ namespace WebAPI
                 .AddTransient<EntityFaker<Product>, ProductFaker>();
 
             //domyœlnia walidacja modelu jest w³¹czona - w poni¿szy sposób mo¿na j¹ wy³¹czyæ
-            services.Configure<ApiBehaviorOptions>(x => x.SuppressModelStateInvalidFilter = true);
+            //services.Configure<ApiBehaviorOptions>(x => x.SuppressModelStateInvalidFilter = true);
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
