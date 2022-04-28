@@ -14,11 +14,20 @@ namespace ConsoleApp
     {
         static void Main(string[] args)
         {
+            using var client = new WebApiClient("http://localhost:5000/api/");
+            var users = client.GetAsync<IEnumerable<User>>("Users").Result;
+            var token = client.PostRequestAsync("Users/Login", users.First(x => x.Roles.HasFlag(Roles.Read))).Result;
+            client.GetHttpRequestHeaders().Authorization = new AuthenticationHeaderValue("Bearer", token.Trim('"'));
+            var orders = client.GetAsync<IEnumerable<Order>>("Orders").Result;
+
+        }
+
+        private static void ManualWay()
+        {
             var handler = new HttpClientHandler()
             {
                 AutomaticDecompression = System.Net.DecompressionMethods.Brotli
             };
-
             using var httpClient = new HttpClient(handler, true);
             httpClient.BaseAddress = new Uri("http://localhost:5000/api/");
 
@@ -30,7 +39,7 @@ namespace ConsoleApp
 
             //sprawdzenie czy status code jest taki jak oczekujemy
             //if(response.StatusCode == System.Net.HttpStatusCode.OK)
-                //return;
+            //return;
 
             //funkcja, która rzuca wyjątkiem jeśli status code jest spoza 2xx, albo nie robi nic
             response.EnsureSuccessStatusCode();
@@ -71,7 +80,6 @@ namespace ConsoleApp
 
             body = response.Content.ReadAsStringAsync().Result;
             var orders = JsonConvert.DeserializeObject<IEnumerable<Order>>(body, settings);
-
         }
     }
 }
