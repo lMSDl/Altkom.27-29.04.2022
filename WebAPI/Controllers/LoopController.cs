@@ -10,6 +10,7 @@ namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [NonController]
     public class LoopController : ControllerBase
     {
 

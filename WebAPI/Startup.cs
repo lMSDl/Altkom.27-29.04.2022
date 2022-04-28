@@ -22,6 +22,7 @@ using WebAPI.FIlters;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using WebAPI.Services;
+using Microsoft.OpenApi.Models;
 
 namespace WebAPI
 {
@@ -37,6 +38,7 @@ namespace WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
             services.AddControllers()
                 //.AddJsonOptions(x => x.JsonSerializerOptions);
                 .AddNewtonsoftJson(x =>
@@ -98,6 +100,11 @@ namespace WebAPI
                     };
                 });
 
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPI", Version = "v1" });
+            })
+                .AddSwaggerGenNewtonsoftSupport();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -107,7 +114,9 @@ namespace WebAPI
             {
                 app.UseDeveloperExceptionPage();
             }
-            
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "SwaggerWebApi v1"));
             app.UseRouting();
 
             app.UseAuthentication();
