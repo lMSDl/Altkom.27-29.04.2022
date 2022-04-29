@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services.Bogus", "Services.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp", "ConsoleApp\ConsoleApp.csproj", "{471DF63C-1B38-47C0-ACE8-348F0E174061}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OWIN", "OWIN\OWIN.csproj", "{4CADEB6A-10AE-421E-89BF-F45AACFDE870}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OWIN", "OWIN\OWIN.csproj", "{4CADEB6A-10AE-421E-89BF-F45AACFDE870}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrpcService", "GrpcService\GrpcService.csproj", "{BC20FB68-981F-42F0-B128-DAD99EAE6E69}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{4CADEB6A-10AE-421E-89BF-F45AACFDE870}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4CADEB6A-10AE-421E-89BF-F45AACFDE870}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4CADEB6A-10AE-421E-89BF-F45AACFDE870}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC20FB68-981F-42F0-B128-DAD99EAE6E69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC20FB68-981F-42F0-B128-DAD99EAE6E69}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC20FB68-981F-42F0-B128-DAD99EAE6E69}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC20FB68-981F-42F0-B128-DAD99EAE6E69}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

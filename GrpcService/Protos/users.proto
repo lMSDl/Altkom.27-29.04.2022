@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+option csharp_namespace = "GrpcService.Users";
+import "google/protobuf/timestamp.proto";
+
+package users;
+
+service GrpcUsers {
+	rpc Create(User) returns (User);
+	rpc Read(Void) returns (Users);
+	rpc ReadById(Id) returns (User);
+	rpc Update(User) returns (Void);
+	rpc Delete(Id) returns (Void);
+}
+
+message Void {
+
+}
+
+message Id {
+	int32 id = 1;
+}
+
+message User {
+	int32 id = 1;
+	string username = 2;
+	string password = 3;
+	string email = 4;
+	int32 roles = 5;
+	google.protobuf.Timestamp update_date = 6;
+}
+
+message Users {
+	repeated User collection = 1;
+}

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR.Client;
+﻿using Grpc.Net.Client;
+using Microsoft.AspNetCore.SignalR.Client;
 using Models;
 using Newtonsoft.Json;
 using System;
@@ -16,10 +17,20 @@ namespace ConsoleApp
     {
         static async Task Main(string[] args)
         {
+            using var grpcChannel = GrpcChannel.ForAddress("https://localhost:5001");
+            var client = new GrpcService.Users.GrpcUsers.GrpcUsersClient(grpcChannel);
+
+            var users = await client.ReadAsync(new GrpcService.Users.Void());
+
+
+        }
+
+        private static async Task SignalR()
+        {
             var signalR = new HubConnectionBuilder()
-                .WithUrl("http://localhost:5000/signalR/users")
-                .WithAutomaticReconnect()
-                .Build();
+                            .WithUrl("http://localhost:5000/signalR/users")
+                            .WithAutomaticReconnect()
+                            .Build();
 
             signalR.Reconnecting += SignalR_Reconnecting;
             signalR.Reconnected += SignalR_Reconnected;
