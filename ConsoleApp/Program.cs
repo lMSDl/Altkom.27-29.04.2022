@@ -14,6 +14,11 @@ namespace ConsoleApp
     {
         static void Main(string[] args)
         {
+            var httpClient = new HttpClient();
+            var openApiClient = new swaggerClient("http://localhost:5000/", httpClient);
+            var openApiUsers = openApiClient.UsersAllAsync().Result;
+
+
             using var client = new WebApiClient("http://localhost:5000/api/");
             var users = client.GetAsync<IEnumerable<User>>("Users").Result;
             var token = client.PostRequestAsync("Users/Login", users.First(x => x.Roles.HasFlag(Roles.Read))).Result;

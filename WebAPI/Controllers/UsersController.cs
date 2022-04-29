@@ -28,6 +28,7 @@ namespace WebAPI.Controllers
         }
 
         [AllowAnonymous]
+        [ProducesResponseType(typeof(IEnumerable<User>), StatusCodes.Status200OK)]
         public override Task<IActionResult> Get()
         {
             return base.Get();
@@ -35,6 +36,8 @@ namespace WebAPI.Controllers
 
         [HttpPost("Login")]
         [AllowAnonymous]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Login(User user)
         {
             var token = await _authService.AuthenticateAsync(user.Username, user.Password);

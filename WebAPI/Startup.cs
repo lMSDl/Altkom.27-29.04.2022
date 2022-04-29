@@ -49,7 +49,7 @@ namespace WebAPI
                     x.SerializerSettings.DateFormatString = "yy MMM+dd";
                     x.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.Objects;
                 })
-                .AddXmlSerializerFormatters()
+                //.AddXmlSerializerFormatters()
                 //dodanie walidacji do kontrolerów
                 .AddFluentValidation(x =>
                     //automatyczne zarejestrowanie walidatorów, które s¹ w tym samym assembly co wskazany
@@ -103,8 +103,8 @@ namespace WebAPI
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPI", Version = "v1" });
-            })
-                .AddSwaggerGenNewtonsoftSupport();
+            });
+               // .AddSwaggerGenNewtonsoftSupport();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

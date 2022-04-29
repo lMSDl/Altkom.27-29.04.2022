@@ -16,6 +16,13 @@ namespace WebAPI.Controllers
         {
         }
 
+
+        [ProducesResponseType(typeof(IEnumerable<Order>), StatusCodes.Status200OK)]
+        public override Task<IActionResult> Get()
+        {
+            return base.Get();
+        }
+
         //[HttpGet("{id}/Products")]
         //public async Task<IActionResult> GetProducts(int id)
         //{
