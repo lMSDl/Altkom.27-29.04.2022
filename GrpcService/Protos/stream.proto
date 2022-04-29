@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+option csharp_namespace = "GrpcService.Stream";
+
+package stream;
+
+service GrpcStream {
+
+	rpc FromServer (Request) returns (stream Response);
+	rpc ToServer (stream Request) returns (Response);
+	rpc FromAndToServer (stream Request) returns (stream Response);
+}
+
+message Request {
+	string text = 1;
+}
+
+message Response {
+	string text = 1;
+}

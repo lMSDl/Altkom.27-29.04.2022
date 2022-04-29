@@ -36,6 +36,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Protobuf Include="..\GrpcService\Protos\stream.proto" GrpcServices="Client">
+      <Link>Protos\stream.proto</Link>
+    </Protobuf>
     <Protobuf Include="..\GrpcService\Protos\users.proto" GrpcServices="Client">
       <Link>Protos\users.proto</Link>
     </Protobuf>

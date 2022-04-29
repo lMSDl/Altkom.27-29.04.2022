@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ConsoleApp
@@ -17,12 +18,51 @@ namespace ConsoleApp
     {
         static async Task Main(string[] args)
         {
-            using var grpcChannel = GrpcChannel.ForAddress("https://localhost:5001");
+            var grpcChannel = GrpcChannel.ForAddress("https://localhost:5001");
+            var client = new GrpcService.Stream.GrpcStream.GrpcStreamClient(grpcChannel);
+
+            var stream = client.FromServer(new GrpcService.Stream.Request() { Text = "Send me something" });
+
+            var tokenSource = new CancellationTokenSource();
+            var counter = 0;
+            try
+            {
+                while (await stream.ResponseStream.MoveNext(tokenSource.Token))
+                {
+                    Console.WriteLine($"{stream.ResponseStream.Current.Text}");
+                    if (++counter == 7)
+                        tokenSource.Cancel();
+                }
+            }
+            catch { }
+
+            var streams = client.FromAndToServer();
+
+            _ = Task.Run(() =>
+            {
+                for (int i = 0; i < int.MaxValue; i++)
+                {
+                    streams.RequestStream.WriteAsync(new GrpcService.Stream.Request { Text = i.ToString() });
+                }
+            });
+
+            _ = Task.Run(async () =>
+            {
+                while (await streams.ResponseStream.MoveNext(CancellationToken.None))
+                {
+                    Console.Write($"{streams.ResponseStream.Current.Text}");
+                }
+            });
+
+            Console.ReadLine();
+        }
+
+        private static async Task GrpcUnary()
+        {
+            var grpcChannel = GrpcChannel.ForAddress("https://localhost:5001");
             var client = new GrpcService.Users.GrpcUsers.GrpcUsersClient(grpcChannel);
 
             var users = await client.ReadAsync(new GrpcService.Users.Void());
-
-
         }
 
         private static async Task SignalR()

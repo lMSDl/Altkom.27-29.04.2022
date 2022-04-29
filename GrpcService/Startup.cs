@@ -45,6 +45,7 @@ namespace GrpcService
             {
                 endpoints.MapGrpcService<GreeterService>();
                 endpoints.MapGrpcService<GrpcUsersService>();
+                endpoints.MapGrpcService<GrpcStreamService>();
 
                 endpoints.MapGet("/", async context =>
                 {

@@ -5,10 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Protos\stream.proto" />
     <None Remove="Protos\users.proto" />
   </ItemGroup>
 
   <ItemGroup>
+    <Protobuf Include="Protos\stream.proto" GrpcServices="Server" />
     <Protobuf Include="Protos\users.proto" GrpcServices="Server" />
     <Protobuf Include="Protos\greet.proto" GrpcServices="Server" />
   </ItemGroup>
