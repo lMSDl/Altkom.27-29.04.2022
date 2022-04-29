@@ -1,4 +1,5 @@
-﻿using Models;
+﻿using Microsoft.AspNetCore.SignalR.Client;
+using Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -7,24 +8,68 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace ConsoleApp
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
+        {
+            var signalR = new HubConnectionBuilder()
+                .WithUrl("http://localhost:5000/signalR/users")
+                .WithAutomaticReconnect()
+                .Build();
+
+            signalR.Reconnecting += SignalR_Reconnecting;
+            signalR.Reconnected += SignalR_Reconnected;
+
+            signalR.On<string>("Welcome", x => Console.WriteLine(x));
+            signalR.On<string>("NewConnection", x => Console.WriteLine($"new connection id: {x}"));
+            signalR.On<string, string>("SendMessageTo", (id, message) => Console.WriteLine($"New message from {id}: {message}"));
+            signalR.On<string, string>("SendMessage", (id, message) => Console.WriteLine($"New message from {id}: {message}"));
+
+            await signalR.StartAsync();
+
+
+
+            signalR.On<string>("LoginFailed", username => Console.WriteLine($"LoginFailed: {username}"));
+            signalR.On<string>("LoginSuceed", username => Console.WriteLine($"LoginSuceed: {username}"));
+            await signalR.SendAsync("JoinGroup", "LoginListener");
+
+
+
+            var message = Console.ReadLine().Split(" | ");
+
+            await signalR.SendAsync("SendMessageTo", message[0], message[1]);
+
+            Console.ReadLine();
+
+            await signalR.DisposeAsync();
+        }
+
+        private static Task SignalR_Reconnected(string arg)
+        {
+            Console.WriteLine("Reconnected!");
+            return Task.CompletedTask;
+        }
+
+        private static Task SignalR_Reconnecting(Exception arg)
+        {
+            Console.WriteLine("Reconnecting...");
+            return Task.CompletedTask;
+        }
+
+        private static void WebApi()
         {
             var httpClient = new HttpClient();
             var openApiClient = new swaggerClient("http://localhost:5000/", httpClient);
             var openApiUsers = openApiClient.UsersAllAsync().Result;
-
-
-            using var client = new WebApiClient("http://localhost:5000/api/");
+            var client = new WebApiClient("http://localhost:5000/api/");
             var users = client.GetAsync<IEnumerable<User>>("Users").Result;
             var token = client.PostRequestAsync("Users/Login", users.First(x => x.Roles.HasFlag(Roles.Read))).Result;
             client.GetHttpRequestHeaders().Authorization = new AuthenticationHeaderValue("Bearer", token.Trim('"'));
             var orders = client.GetAsync<IEnumerable<Order>>("Orders").Result;
-
         }
 
         private static void ManualWay()

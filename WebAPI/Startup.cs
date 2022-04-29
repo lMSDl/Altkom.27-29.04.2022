@@ -23,6 +23,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using WebAPI.Services;
 using Microsoft.OpenApi.Models;
+using WebAPI.Hubs;
 
 namespace WebAPI
 {
@@ -104,7 +105,9 @@ namespace WebAPI
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPI", Version = "v1" });
             });
-               // .AddSwaggerGenNewtonsoftSupport();
+            // .AddSwaggerGenNewtonsoftSupport();
+
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -127,6 +130,7 @@ namespace WebAPI
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<UsersHub>("signalR/Users");
                 endpoints.MapControllers();
             });
         }
