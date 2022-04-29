@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsService.Core", "Wind
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsServices.Topshelf", "WindowsServices.Topshelf\WindowsServices.Topshelf.csproj", "{18E72539-6768-4376-95D2-C89069848450}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HealthCheck", "HealthCheck\HealthCheck.csproj", "{4E612776-8EF5-413E-BFF7-CA98438DCFB1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,6 +79,10 @@ Global
 		{18E72539-6768-4376-95D2-C89069848450}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{18E72539-6768-4376-95D2-C89069848450}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{18E72539-6768-4376-95D2-C89069848450}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E612776-8EF5-413E-BFF7-CA98438DCFB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E612776-8EF5-413E-BFF7-CA98438DCFB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E612776-8EF5-413E-BFF7-CA98438DCFB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E612776-8EF5-413E-BFF7-CA98438DCFB1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
